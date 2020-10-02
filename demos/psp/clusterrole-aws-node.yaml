@@ -1,0 +1,36 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aws-node
+rules:
+- apiGroups:
+  - crd.k8s.amazonaws.com
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - nodes
+  - namespaces
+  verbs:
+  - list
+  - watch
+  - get
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resourceNames:
+  - eks.privileged
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use

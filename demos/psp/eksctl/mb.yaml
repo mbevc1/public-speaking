@@ -1,0 +1,37 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: mb
+  region: eu-west-1
+  tags:
+    Managed_by: 'eksctl'
+  version: '1.17'
+
+managedNodeGroups:
+  - name: ng-1
+    instanceType: t3.medium
+    desiredCapacity: 3
+    minSize: 2
+    maxSize: 3
+    availabilityZones:
+      - 'eu-west-1a'
+      - 'eu-west-1b'
+      - 'eu-west-1c'
+    labels:
+      role: 'mb'
+    privateNetworking: true
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+      #publicKeyPath: ~/.ssh/ec2_id_rsa.pub
+    volumeSize: 20
+    #volumeType: 'gp2'
+#fargateProfiles:
+#  - name: fp-default
+#    selectors:
+      # All workloads in the "default" Kubernetes namespace will be
+      # scheduled onto Fargate:
+#      - namespace: default
+      # All workloads in the "kube-system" Kubernetes namespace will be
+      # scheduled onto Fargate:
+#      - namespace: kube-system

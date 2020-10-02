@@ -1,0 +1,16 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    eks.amazonaws.com/component: pod-security-policy
+    kubernetes.io/cluster-service: "true"
+  name: eks:podsecuritypolicy:privileged
+rules:
+- apiGroups:
+  - policy
+  resourceNames:
+  - eks.limited
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
