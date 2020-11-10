@@ -3,8 +3,9 @@
 
 function shellu () {
   echo "nsenter --mount=/proc/1/ns/mnt -- /bin/bash"
-  echo "nsenter -t 1 -m -u -i -n sh -c bash"
   echo "curl http://169.254.169.254/"
+  echo "-- or --"
+  echo "nsenter -t 1 -m -u -i -n sh -c bash"
   echo "curl http://169.254.169.254/2019-10-01/user-data"
   AWS_PROFILE=test kubectl run shell --restart=Never -it --image centos:8 \
   --rm --attach \
@@ -32,8 +33,9 @@ function shellu () {
 
 function shell () {
   echo "nsenter --mount=/proc/1/ns/mnt -- /bin/bash"
-  echo "nsenter -t 1 -m -u -i -n sh -c bash"
   echo "curl http://169.254.169.254/"
+  echo "-- or --"
+  echo "nsenter -t 1 -m -u -i -n sh -c bash"
   echo "curl http://169.254.169.254/2019-10-01/user-data"
   AWS_PROFILE=test kubectl --as=system:serviceaccount:default:fake-user run shell --restart=Never -it --image centos:8 \
   --rm --attach \

@@ -10,6 +10,7 @@ rules:
   - policy
   resourceNames:
   - eks.limited
+#  - eks.privileged
   resources:
   - podsecuritypolicies
   verbs:
