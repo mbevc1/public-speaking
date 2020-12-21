@@ -1,4 +1,5 @@
 # Demos
 
 * [PodSecurityPolicy](psp/)
-* [TErraform 0.13](tf13/)
+* [Terraform 0.13](tf13/)
+* [Security notifications](sec_notify/)
