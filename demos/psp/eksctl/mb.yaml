@@ -8,6 +8,9 @@ metadata:
     Managed_by: 'eksctl'
   version: '1.18'
 
+iam:
+  withOIDC: true
+
 managedNodeGroups:
   - name: ng-1
     instanceType: t3.medium
