@@ -8,6 +8,11 @@ metadata:
     Managed_by: 'eksctl'
   version: '1.18'
 
+vpc:
+    clusterEndpoints:
+        publicAccess: true
+        privateAccess: true
+
 iam:
   withOIDC: true
 
@@ -28,7 +33,7 @@ managedNodeGroups:
       allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
       #publicKeyPath: ~/.ssh/ec2_id_rsa.pub
     volumeSize: 20
-    #volumeType: 'gp2'
+    volumeType: 'gp3'
 #fargateProfiles:
 #  - name: fp-default
 #    selectors:
