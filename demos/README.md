@@ -4,3 +4,4 @@
 * [Terraform 0.13](tf13/)
 * [Security notifications](sec_notify/)
 * [Securing sensitive Terraform values](tf-sec/)
+* [Terraform 0.15 testing](tf15-testing/)
