@@ -1,0 +1,58 @@
+# vim:ft=sh
+# Helper functions
+
+function shellu () {
+  echo "nsenter --mount=/proc/1/ns/mnt -- /bin/bash"
+  echo "-- or --"
+  echo "nsenter -t 1 -m -u -i -n sh -c bash"
+  kubectl run shell --restart=Never -it --image centos:8 \
+  --rm --attach \
+  --overrides \
+        '{
+          "spec":{
+            "hostPID": true,
+            "containers":[{
+              "name":"scary",
+              "image": "centos:8",
+	      "imagePullPolicy": "Always",
+              "stdin": true,
+              "tty": true,
+              "command":["/bin/bash"],
+	      "nodeSelector":{
+		"dedicated":"master"
+	      },
+              "securityContext":{
+                "privileged":true
+              }
+            }]
+          }
+        }'
+}
+
+function shell () {
+  echo "nsenter --mount=/proc/1/ns/mnt -- /bin/bash"
+  echo "-- or --"
+  echo "nsenter -t 1 -m -u -i -n sh -c bash"
+  kubectl --as=system:serviceaccount:default:fake-user run shell --restart=Never -it --image centos:8 \
+  --rm --attach \
+  --overrides \
+        '{
+          "spec":{
+            "hostPID": true,
+            "containers":[{
+              "name":"scary",
+              "image": "centos:8",
+	      "imagePullPolicy": "Always",
+              "stdin": true,
+              "tty": true,
+              "command":["/bin/bash"],
+	      "nodeSelector":{
+		"dedicated":"master"
+	      },
+              "securityContext":{
+                "privileged":true
+              }
+            }]
+          }
+        }'
+}
