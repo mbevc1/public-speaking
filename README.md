@@ -5,7 +5,7 @@ Public speaking materials and talks content.
 ## Biography
 
 ```
-Marko is a Senior DevOps Consultant at The Scale Factory. He has been working
+Marko is a Head of Consultancy at The Scale Factory. He has been working
 with AWS services and HashiCorp stack on a daily basis for the last 5 years,
 empowering a variety of different customer teams to improve their cloud workloads.
 He is an open source contributor, HashiCorp Ambassador, very passionate about
