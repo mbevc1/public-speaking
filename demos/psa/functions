@@ -1,5 +1,7 @@
 # vim:ft=sh
 # Helper functions
+# https://medium.com/@LachlanEvenson/hands-on-with-kubernetes-pod-security-admission-b6cac495cd11
+# https://kubernetes.io/docs/concepts/security/pod-security-admission/
 
 function shellu () {
   echo "nsenter --mount=/proc/1/ns/mnt -- /bin/bash"
