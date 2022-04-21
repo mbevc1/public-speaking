@@ -2,32 +2,44 @@
 
 CLUSTER_NAME=mb
 
+#  cluster:
+#    name: ${CLUSTER_NAME}
+#    endpoint: $(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output json)
 cat <<EOF | kubectl apply -f -
-apiVersion: karpenter.sh/v1alpha3
+apiVersion: karpenter.sh/v1alpha5
 kind: Provisioner
 metadata:
   name: default
 spec:
-  cluster:
-    name: ${CLUSTER_NAME}
-    endpoint: $(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output json)
+  labels: # Added to provisioned nodes
+    team: a-team
+  requirements: # using well-known annotations
+    - key: "node.kubernetes.io/instance-type"
+      operator: In
+      values: ["m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.16xlarge", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.18xlarge", "t4g.nano", "t4g.micro", "t4g.small", "t4g.xlarge"]
+    - key: "topology.kubernetes.io/zone"
+      operator: In
+      values: ["eu-west-1a", "eu-west-1c"]
+    - key: "kubernetes.io/arch"
+      operator: In
+      values: ["arm64", "amd64"]
+    - key: "karpenter.sh/capacity-type" # If not included, the webhook for the AWS cloud provider will default to on-demand, not spot
+      operator: In
+      values: ["on-demand"]
+  # These fields vary per cloud provider, see your cloud provider specific documentation
+  #provider: {}
+  limits:
+    resources:
+      cpu: 1000
+  provider:
+    subnetSelector:
+      karpenter.sh/discovery: ${CLUSTER_NAME}
+    securityGroupSelector:
+      karpenter.sh/discovery: ${CLUSTER_NAME}
+    tags:
+      team: a-team
+    instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}
   ttlSecondsAfterEmpty: 30
-  zones: ["eu-west-1a", "eu-west-1c"]
-  instanceTypes:
-    - m5.xlarge
-    - m5.2xlarge
-    - m5.4xlarge
-    - m5.8xlarge
-    - m5.16xlarge
-    - c5.xlarge
-    - c5.2xlarge
-    - c5.4xlarge
-    - c5.9xlarge
-    - c5.18xlarge
-    - t4g.nano
-    - t4g.micro
-    - t4g.small
-    - t4g.xlarge
 EOF
 
 kubectl get provisioner default -o yaml

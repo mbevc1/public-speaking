@@ -9,7 +9,11 @@ SUBNET_IDS=$(aws cloudformation describe-stacks \
 
 echo "Subnets: ${SUBNET_IDS}"
 
+#aws ec2 create-tags \
+#    --resources $(echo ${SUBNET_IDS//,/ }) \
+#    --tags Key="kubernetes.io/cluster/${CLUSTER_NAME}",Value="owned"
+
 aws ec2 create-tags \
     --resources $(echo ${SUBNET_IDS//,/ }) \
-    --tags Key="kubernetes.io/cluster/${CLUSTER_NAME}",Value=
+    --tags Key="karpenter.sh/discovery",Value="${CLUSTER_NAME}"
 

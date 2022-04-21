@@ -5,14 +5,15 @@ metadata:
   name: mb
   region: eu-west-1
   tags:
-    Managed_by: 'eksctl'
+    managed_by: 'eksctl'
+    karpenter.sh/discovery: mb
     #kubernetes.io/cluster/mb: true
-  version: '1.21'
+  version: '1.22'
 
-vpc:
-    clusterEndpoints:
-        publicAccess: true
-        privateAccess: true
+#vpc:
+#    clusterEndpoints:
+#        publicAccess: true
+#        privateAccess: true
 
 iam:
   withOIDC: true
@@ -33,6 +34,7 @@ iam:
         - "ec2:CreateTags"
         - "iam:PassRole"
         - "ec2:TerminateInstances"
+        - "ec2:DeleteLaunchTemplate"
         # Read Operations
         - "ec2:DescribeLaunchTemplates"
         - "ec2:DescribeInstances"
@@ -47,8 +49,9 @@ fargateProfiles:
   - name: karpenter
     selectors:
       - namespace: karpenter
+      - namespace: kube-system
   # All workloads in the "kube-system" Kubernetes namespace will be
   # scheduled onto Fargate:
-  - name: kube-system
-    selectors:
-      - namespace: kube-system
+  #- name: kube-system
+  #  selectors:
+  #    - namespace: kube-system

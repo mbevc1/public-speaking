@@ -7,6 +7,7 @@ AWS_ACCOUNT_ID=803761598153
 #TEMPOUT=$(mktemp)
 TEMPOUT=iam-cfn.yaml
 #curl -fsSL https://raw.githubusercontent.com/awslabs/karpenter/"${KARPENTER_VERSION}"/docs/aws/karpenter.cloudformation.yaml > $TEMPOUT \ &&
+#https://karpenter.sh/docs/getting-started/cloudformation.yaml
 aws cloudformation deploy \
   --stack-name Karpenter-${CLUSTER_NAME} \
   --template-file ${TEMPOUT} \
@@ -20,3 +21,6 @@ eksctl create iamidentitymapping \
   --arn arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-${CLUSTER_NAME} \
   --group system:bootstrappers \
   --group system:nodes
+
+# If using spot instances and only needed once!
+# aws iam create-service-linked-role --aws-service-name spot.amazonaws.com
