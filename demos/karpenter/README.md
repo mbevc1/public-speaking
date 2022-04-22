@@ -29,7 +29,27 @@ In the [Terraform folder](https://github.com/mbevc1/public-speaking/tree/main/de
 
 In the [Karpenter folder](https://github.com/mbevc1/public-speaking/tree/main/demos/karpenter/manifests), you can find the **Provisioner** and **Kubernetes Deployment** yaml files.
 
-## Usage
+## Usage `eksctl`
+
+* Create cluster using
+```bash
+eksctl create cluster -f eksctl.yaml
+```
+* Set up IAM roles/permissions, set up controllers, provisioners and deployment:
+```bash
+./1_iam.sh
+./2_controllers.sh
+./3_provisioner.sh
+./4_deployment.sh
+```
+* Finally you can scale the deployments using ``kubectl scale deployment <deployment-name> --replicas=10``
+* Clean-up:
+```bash
+./cleanup.sh
+eksctl delete cluster -f eksctl.yaml
+```
+
+## Usage TF
 
 - First, create the environment with Terraform.
 ```bash
