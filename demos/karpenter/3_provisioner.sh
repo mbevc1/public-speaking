@@ -39,7 +39,12 @@ spec:
     tags:
       team: a-team
     instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}
-  ttlSecondsAfterEmpty: 30
+  # Enables consolidation which attempts to reduce cluster cost by both removing un-needed nodes and down-sizing those
+  # that can't be removed.  Mutually exclusive with the ttlSecondsAfterEmpty parameter.
+  consolidation:
+    enabled: true
+  ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+  #ttlSecondsAfterEmpty: 30
 EOF
 
 kubectl get provisioner default -o yaml

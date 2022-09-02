@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CLUSTER_NAME=mb
-AWS_ACCOUNT_ID=803761598153
+AWS_ACCOUNT_ID=764407762618
 
 # Creates IAM resources used by Karpenter
 #TEMPOUT=$(mktemp)

@@ -21,5 +21,5 @@ You can find materials and [demos](demos/) here.
 ## Find me online
 * [Twitter](https://twitter.com/_MarkoB)
 * [LinkedIN](https://www.linkedin.com/in/marko-bevc/)
-* [PGP public key](https://www.scalefactory.com/about/meet-team/marko-bevc/pgp-key.txt)
-* [SF](https://www.scalefactory.com/about/meet-team/marko-bevc/)
+* [PGP public key](https://github.com/mbevc1.gpg)
+* [About](https://www.scalefactory.com/about/meet-team/marko-bevc/)

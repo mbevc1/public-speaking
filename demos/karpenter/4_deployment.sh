@@ -11,13 +11,17 @@ spec:
     matchLabels:
       app: inflate
   strategy:
-    type: Recreate
+    #type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
   template:
     metadata:
       labels:
         app: inflate
     spec:
-      terminationGracePeriodSeconds: 0
+      #terminationGracePeriodSeconds: 0
       containers:
         - name: inflate
           image: public.ecr.aws/eks-distro/kubernetes/pause:3.5

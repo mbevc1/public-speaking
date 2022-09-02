@@ -8,7 +8,7 @@ metadata:
     managed_by: 'eksctl'
     karpenter.sh/discovery: mb
     #kubernetes.io/cluster/mb: true
-  version: '1.22'
+  version: '1.23'
 
 #vpc:
 #    clusterEndpoints:
