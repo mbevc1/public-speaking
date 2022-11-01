@@ -17,38 +17,43 @@ metadata:
 
 iam:
   withOIDC: true
-  serviceAccounts:
-  - metadata:
-      name: karpenter
-      namespace: karpenter
-    attachPolicy:
-      Version: "2012-10-17"
-      Statement:
-      - Effect: Allow
-        Resource: "*"
-        Action:
-        # Write Operations
-        - "ec2:CreateLaunchTemplate"
-        - "ec2:CreateFleet"
-        - "ec2:RunInstances"
-        - "ec2:CreateTags"
-        - "iam:PassRole"
-        - "ec2:TerminateInstances"
-        - "ec2:DeleteLaunchTemplate"
-        # Read Operations
-        - "ec2:DescribeLaunchTemplates"
-        - "ec2:DescribeInstances"
-        - "ec2:DescribeSecurityGroups"
-        - "ec2:DescribeSubnets"
-        - "ec2:DescribeInstanceTypes"
-        - "ec2:DescribeInstanceTypeOfferings"
-        - "ec2:DescribeAvailabilityZones"
-        - "ssm:GetParameter"
+#  serviceAccounts:
+#  - metadata:
+#      name: karpenter
+#      namespace: karpenter
+#    attachPolicy:
+#      Version: "2012-10-17"
+#      Statement:
+#      - Effect: Allow
+#        Resource: "*"
+#        Action:
+#        # Write Operations
+#        - "ec2:CreateLaunchTemplate"
+#        - "ec2:CreateFleet"
+#        - "ec2:RunInstances"
+#        - "ec2:CreateTags"
+#        - "ec2:TerminateInstances"
+#        - "ec2:DeleteLaunchTemplate"
+#        # Read Operations
+#        - "ec2:DescribeLaunchTemplates"
+#        - "ec2:DescribeInstances"
+#        - "ec2:DescribeSecurityGroups"
+#        - "ec2:DescribeSubnets"
+#        - "ec2:DescribeImages"
+#        - "ec2:DescribeInstanceTypes"
+#        - "ec2:DescribeInstanceTypeOfferings"
+#        - "ec2:DescribeAvailabilityZones"
+#        - "ec2:DescribeSpotPriceHistory"
+#        - "ssm:GetParameter"
+#        - "pricing:GetProducts"
+#        # for !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/KarpenterNodeRole-${ClusterName}"
+#        - "iam:PassRole"
 
 fargateProfiles:
   - name: karpenter
     selectors:
       - namespace: karpenter
+      - namespace: monitoring
       - namespace: kube-system
   # All workloads in the "kube-system" Kubernetes namespace will be
   # scheduled onto Fargate:

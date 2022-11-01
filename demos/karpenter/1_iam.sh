@@ -5,7 +5,8 @@ AWS_ACCOUNT_ID=764407762618
 
 # Creates IAM resources used by Karpenter
 #TEMPOUT=$(mktemp)
-TEMPOUT=iam-cfn.yaml
+#TEMPOUT=iam-cfn.yaml
+TEMPOUT=cloudformation.yaml
 #curl -fsSL https://raw.githubusercontent.com/awslabs/karpenter/"${KARPENTER_VERSION}"/docs/aws/karpenter.cloudformation.yaml > $TEMPOUT \ &&
 #https://karpenter.sh/docs/getting-started/cloudformation.yaml
 aws cloudformation deploy \
@@ -22,5 +23,16 @@ eksctl create iamidentitymapping \
   --group system:bootstrappers \
   --group system:nodes
 
+# Create an AWS IAM Role, Kubernetes service account, and associate them using IRSA. Permission to launch instances.
+# Only creates the role and let's Helm chart to create SA
+eksctl create iamserviceaccount \
+  --cluster "${CLUSTER_NAME}" --name karpenter --namespace karpenter \
+  --role-name "${CLUSTER_NAME}-karpenter" \
+  --attach-policy-arn "arn:aws:iam::${AWS_ACCOUNT_ID}:policy/KarpenterControllerPolicy-${CLUSTER_NAME}" \
+  --role-only \
+  --approve
+
 # If using spot instances and only needed once!
-# aws iam create-service-linked-role --aws-service-name spot.amazonaws.com
+#aws iam create-service-linked-role --aws-service-name spot.amazonaws.com || true
+# If the role has already been successfully created, you will see:
+# An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: Service role name AWSServiceRoleForEC2Spot has been taken in this account, please try a different suffix.
