@@ -49,6 +49,11 @@ iam:
 #        # for !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/KarpenterNodeRole-${ClusterName}"
 #        - "iam:PassRole"
 
+#karpenter:
+#  version: 'v0.18.1' # Exact version must be specifiedi
+#  createServiceAccount: true # default is false
+#  defaultInstanceProfile: 'KarpenterNodeInstanceProfile' # default is to use the IAM instance profile created by eksctl
+
 fargateProfiles:
   - name: karpenter
     selectors:

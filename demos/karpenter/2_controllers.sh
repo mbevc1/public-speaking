@@ -6,19 +6,19 @@ KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karp
 KARPENTER_VERSION="v0.18.1"
 
 #helm repo add karpenter https://awslabs.github.io/karpenter/charts
-helm repo add karpenter https://charts.karpenter.sh
-helm repo update
-helm upgrade --install karpenter karpenter/karpenter \
+#helm repo add karpenter https://charts.karpenter.sh
+#helm repo update
+#helm upgrade --install karpenter karpenter/karpenter \
+helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --version ${KARPENTER_VERSION} \
   --create-namespace --namespace karpenter \
   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_IAM_ROLE_ARN} \
   --set clusterName=${CLUSTER_NAME} \
   --set clusterEndpoint=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output json) \
   --set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME}
+  #--wait # for the defaulting webhook to install before creating a Provisioner
   #--set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter" \
   #--set serviceAccount.create=false \
   #--set serviceAccount.name=karpenter \
-  #--wait # for the defaulting webhook to install before creating a Provisioner
-# --install karpenter oci://public.ecr.aws/karpenter/karpenter
 # --version 0.5.5
 
 # Optional monitoring
