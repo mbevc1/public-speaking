@@ -31,14 +31,16 @@ spec:
   limits:
     resources:
       cpu: 1000
-  provider:
-    subnetSelector:
-      karpenter.sh/discovery: ${CLUSTER_NAME}
-    securityGroupSelector:
-      karpenter.sh/discovery: ${CLUSTER_NAME}
-    tags:
-      team: a-team
-    instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}
+  providerRef:                                # optional, recommended to use instead of 'provider'
+    name: default
+  #provider:
+  #  subnetSelector:
+  #    karpenter.sh/discovery: ${CLUSTER_NAME}
+  #  securityGroupSelector:
+  #    karpenter.sh/discovery: ${CLUSTER_NAME}
+  #  tags:
+  #    team: a-team
+  #  instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}
   # Enables consolidation which attempts to reduce cluster cost by both removing un-needed nodes and down-sizing those
   # that can't be removed.  Mutually exclusive with the ttlSecondsAfterEmpty parameter.
   consolidation:
@@ -54,9 +56,17 @@ spec:
   subnetSelector:
     karpenter.sh/discovery: ${CLUSTER_NAME}
   securityGroupSelector:
-    karpenter.sh/discovery: ${CLUSTER_NAME}
+    #karpenter.sh/discovery: ${CLUSTER_NAME}
+    kubernetes.io/cluster/${CLUSTER_NAME}: '*'
+  instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}          # optional, if already set in controller args
+  #launchTemplate: MyLaunchTemplate            # optional, see Launch Template documentation
+  tags:
+    managed_by: "karpenter"                    # optional, add tags for your own use
+    #karpenter.sh/discovery: ${CLUSTER_NAME}   # needs to match the SG selector
+    team: a-team
 EOF
 
+echo "---"
 kubectl get provisioner default -o yaml
 echo "---"
 kubectl get awsnodetemplate default -o yaml

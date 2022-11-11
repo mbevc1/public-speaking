@@ -52,7 +52,7 @@ iam:
 #karpenter:
 #  version: 'v0.18.1' # Exact version must be specifiedi
 #  createServiceAccount: true # default is false
-#  defaultInstanceProfile: 'KarpenterNodeInstanceProfile' # default is to use the IAM instance profile created by eksctl
+#  defaultInstanceProfile: 'KarpenterNodeInstanceProfile-mb' # default is to use the IAM instance profile created by eksctl
 
 fargateProfiles:
   - name: karpenter
@@ -65,3 +65,11 @@ fargateProfiles:
   #- name: kube-system
   #  selectors:
   #    - namespace: kube-system
+
+#managedNodeGroups:
+#  - instanceType: m5.large
+#    amiFamily: AmazonLinux2
+#    name: mb-ng
+#    desiredCapacity: 2
+#    minSize: 1
+#    maxSize: 10
