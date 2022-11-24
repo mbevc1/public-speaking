@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: helloapp
+  name: helloapp
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: helloapp
+      version: v1
+  strategy:
+    #type: Recreate
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  template:
+    metadata:
+      labels:
+        app: helloapp
+        version: v1
+    spec:
+      containers:
+      - image: gcr.io/google-samples/hello-app:2.0 # 1.0 | 2.0
+        name: helloapp
+        resources:
+          requests:
+            cpu: 1
+        ports:
+        - containerPort: 8080
+      nodeSelector:
+        kubernetes.io/arch: amd64

@@ -1,3 +1,5 @@
+nodeSelector:
+  team: b-team
 datasources:
   datasources.yaml:
     apiVersion: 1
@@ -22,6 +24,6 @@ dashboardProviders:
 dashboards:
   default:
     capacity-dashboard:
-      url: https://karpenter.sh/v0.18.1/getting-started/getting-started-with-eksctl/karpenter-capacity-dashboard.json
+      url: https://karpenter.sh/v0.19.0/getting-started/getting-started-with-eksctl/karpenter-capacity-dashboard.json
     performance-dashboard:
-      url: https://karpenter.sh/v0.18.1/getting-started/getting-started-with-eksctl/karpenter-performance-dashboard.json
+      url: https://karpenter.sh/v0.19.0/getting-started/getting-started-with-eksctl/karpenter-performance-dashboard.json

@@ -6,9 +6,17 @@ server:
   fullnameOverride: prometheus-server
   persistentVolume:
     enabled: false
+  nodeSelector:
+    team: b-team
 
 extraScrapeConfigs: |
     - job_name: karpenter
-      static_configs:
-      - targets:
-        - karpenter.karpenter:8080
+      kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+          - karpenter
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_endpoint_port_name]
+        regex: http-metrics
+        action: keep

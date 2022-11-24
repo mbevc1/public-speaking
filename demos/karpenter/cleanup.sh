@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CLUSTER_NAME=mb
-AWS_ACCOUNT_ID=764407762618
+AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 
 helm uninstall karpenter --namespace karpenter
 eksctl delete iamserviceaccount --cluster ${CLUSTER_NAME} --name karpenter --namespace karpenter

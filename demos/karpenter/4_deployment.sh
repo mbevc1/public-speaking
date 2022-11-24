@@ -21,10 +21,10 @@ spec:
       labels:
         app: inflate
     spec:
-      #terminationGracePeriodSeconds: 0
+      terminationGracePeriodSeconds: 0
       containers:
         - name: inflate
-          image: public.ecr.aws/eks-distro/kubernetes/pause:3.5
+          image: public.ecr.aws/eks-distro/kubernetes/pause:3.7
           resources:
             requests:
               cpu: 1
@@ -45,10 +45,11 @@ spec:
         kubernetes.io/arch: amd64
 EOF
 
+kubectl get deployment inflate -o yaml | yq
 # 1 3 7-delSmall 100
 #kubectl scale deployment inflate --replicas 5
 #kubectl logs -f -n karpenter $(kubectl get pods -n karpenter -l karpenter=controller -o name)
-#kubectl get node -L "node.kubernetes.io/instance-type" -L "topology.kubernetes.io/zone" -L "kubernetes.io/arch"
+#kubectl get node -L "node.kubernetes.io/instance-type" -L "topology.kubernetes.io/zone" -L "kubernetes.io/arch" -L "karpenter.sh/capacity-type"
 #kubectl scale deployment inflate --replicas 0
 
 # 1 3

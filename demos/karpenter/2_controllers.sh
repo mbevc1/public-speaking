@@ -1,9 +1,10 @@
 #!/bin/bash
 
 CLUSTER_NAME=mb
-AWS_ACCOUNT_ID=764407762618
+AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
+CLUSTER_ENDPOINT="$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output text)"
 KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter"
-KARPENTER_VERSION="v0.18.1"
+KARPENTER_VERSION="v0.19.2"
 
 #helm repo add karpenter https://awslabs.github.io/karpenter/charts
 #helm repo add karpenter https://charts.karpenter.sh
@@ -12,14 +13,18 @@ KARPENTER_VERSION="v0.18.1"
 helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --version ${KARPENTER_VERSION} \
   --create-namespace --namespace karpenter \
   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_IAM_ROLE_ARN} \
-  --set clusterName=${CLUSTER_NAME} \
-  --set clusterEndpoint=$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output json) \
-  --set aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
-  --wait # for the defaulting webhook to install before creating a Provisioner
+  --set settings.aws.clusterName=${CLUSTER_NAME} \
+  --set settings.aws.clusterEndpoint=${CLUSTER_ENDPOINT} \
+  --set settings.aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
+  --set settings.aws.interruptionQueueName=${CLUSTER_NAME}
+  #--wait # for the defaulting webhook to install before creating a Provisioner
   #--set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter" \
   #--set serviceAccount.create=false \
   #--set serviceAccount.name=karpenter \
 # --version 0.5.5
+
+# Metrics server
+#kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 # Optional monitoring
 #helm repo add grafana-charts https://grafana.github.io/helm-charts
