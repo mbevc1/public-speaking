@@ -7,7 +7,7 @@ function shellu () {
   echo "-- or --"
   echo "nsenter -t 1 -m -u -i -n sh -c bash"
   echo "curl http://169.254.169.254/2019-10-01/user-data"
-  AWS_PROFILE=test kubectl run shell --restart=Never -it --image centos:8 \
+  AWS_PROFILE=test aws-vault exec kubectl run shell --restart=Never -it --image almalinux:9 \
   --rm --attach \
   --overrides \
         '{
@@ -15,14 +15,14 @@ function shellu () {
             "hostPID": true,
             "containers":[{
               "name":"scary",
-              "image": "centos:8",
-	      "imagePullPolicy": "Always",
+              "image": "almalinux:9",
+              "imagePullPolicy": "Always",
               "stdin": true,
               "tty": true,
               "command":["/bin/bash"],
-	      "nodeSelector":{
-		"dedicated":"master"
-	      },
+              "nodeSelector":{
+                "dedicated":"master"
+              },
               "securityContext":{
                 "privileged":true
               }
@@ -37,7 +37,7 @@ function shell () {
   echo "-- or --"
   echo "nsenter -t 1 -m -u -i -n sh -c bash"
   echo "curl http://169.254.169.254/2019-10-01/user-data"
-  AWS_PROFILE=test kubectl --as=system:serviceaccount:default:fake-user run shell --restart=Never -it --image centos:8 \
+  AWS_PROFILE=test kubectl --as=system:serviceaccount:default:fake-user run shell --restart=Never -it --image almalinux:9 \
   --rm --attach \
   --overrides \
         '{
@@ -45,14 +45,14 @@ function shell () {
             "hostPID": true,
             "containers":[{
               "name":"scary",
-              "image": "centos:8",
-	      "imagePullPolicy": "Always",
+              "image": "almalinux:9",
+              "imagePullPolicy": "Always",
               "stdin": true,
               "tty": true,
               "command":["/bin/bash"],
-	      "nodeSelector":{
-		"dedicated":"master"
-	      },
+                  "nodeSelector":{
+                "dedicated":"master"
+              },
               "securityContext":{
                 "privileged":true
               }
