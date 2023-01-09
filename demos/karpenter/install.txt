@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: inflate
-          image: public.ecr.aws/eks-distro/kubernetes/pause:3.2
+          image: public.ecr.aws/eks-distro/kubernetes/pause:3.9
           resources:
             requests:
               cpu: 1
