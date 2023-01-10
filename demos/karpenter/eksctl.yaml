@@ -49,8 +49,13 @@ iam:
 #        # for !Sub "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/KarpenterNodeRole-${ClusterName}"
 #        - "iam:PassRole"
 
+#cloudWatch:
+#  clusterLogging:
+#    enableTypes: ["audit", "authenticator"]
+#    logRetentionInDays: 7
+
 #karpenter:
-#  version: 'v0.19.1' # Exact version must be specifiedi
+#  version: 'v0.22.0' # Exact version must be specifiedi
 #  createServiceAccount: true # default is false
 #  defaultInstanceProfile: 'KarpenterNodeInstanceProfile-mb' # default is to use the IAM instance profile created by eksctl
 
