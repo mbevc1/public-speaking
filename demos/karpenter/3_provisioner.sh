@@ -13,7 +13,7 @@ spec:
   requirements: # using well-known annotations
     - key: "karpenter.k8s.aws/instance-category"
       operator: In
-      values: ["c", "m", "t"]
+      values: ["c", "m", "t"] # t4g
     - key: "karpenter.k8s.aws/instance-cpu"
       operator: Lt
       values: ["33"]
