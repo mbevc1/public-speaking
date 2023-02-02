@@ -13,10 +13,10 @@ spec:
   requirements: # using well-known annotations
     - key: "karpenter.k8s.aws/instance-category"
       operator: In
-      values: ["c", "m", "t4g"]
+      values: ["c", "m", "t"]
     - key: "karpenter.k8s.aws/instance-cpu"
       operator: Lt
-      values: ["65"]
+      values: ["33"]
     #  operator: In
     #  values: ["4", "8", "16", "32"]
     #- key: karpenter.k8s.aws/instance-hypervisor
