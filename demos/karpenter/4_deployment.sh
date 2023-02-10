@@ -45,7 +45,7 @@ spec:
         kubernetes.io/arch: amd64
 EOF
 
-kubectl get deployment inflate -o yaml | yq
+kubectl get deployment inflate -o yaml | yq #-M
 # 1 3 7-delSmall 100
 #kubectl scale deployment inflate --replicas 5
 #kubectl logs -f -n karpenter $(kubectl get pods -n karpenter -l karpenter=controller -o name)

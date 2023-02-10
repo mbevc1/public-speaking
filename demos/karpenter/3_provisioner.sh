@@ -22,9 +22,9 @@ spec:
     #- key: karpenter.k8s.aws/instance-hypervisor
     #  operator: In
     #  values: ["nitro"]
-    #- key: "node.kubernetes.io/instance-type"
-    #  operator: In
-    #  values: ["m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.16xlarge", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.18xlarge", "t4g.nano", "t4g.micro", "t4g.small", "t4g.xlarge", "t4g.2xlarge"]
+    - key: "node.kubernetes.io/instance-type"
+      operator: In
+      values: ["m5.xlarge", "m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.16xlarge", "c5.xlarge", "c5.2xlarge", "c5.4xlarge", "c5.9xlarge", "c5.18xlarge", "t4g.nano", "t4g.micro", "t4g.small", "t4g.xlarge", "t4g.2xlarge"]
     - key: "topology.kubernetes.io/zone"
       operator: In
       values: ["eu-west-1a", "eu-west-1c"]
@@ -55,6 +55,7 @@ spec:
     enabled: true
   ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
   #ttlSecondsAfterEmpty: 30
+  weight: 1 # similar to afinity weigth (higher is better)
 ---
 apiVersion: karpenter.k8s.aws/v1alpha1
 kind: AWSNodeTemplate
@@ -103,6 +104,6 @@ spec:
 EOF
 
 echo "---"
-kubectl get provisioner default -o yaml | yq
+kubectl get provisioner default -o yaml | yq #-M
 echo "---"
-kubectl get awsnodetemplate default -o yaml | yq
+kubectl get awsnodetemplate default -o yaml | yq #-M
