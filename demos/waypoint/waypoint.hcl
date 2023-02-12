@@ -54,6 +54,7 @@ app "web" {
 variable "region" {
   type    = string
   default = "eu-west-1"
+  env     = ["REGION"]
 }
 
 variable "port" {
