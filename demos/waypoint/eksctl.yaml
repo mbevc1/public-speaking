@@ -1,0 +1,74 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: mb
+  region: eu-west-1
+  tags:
+    managed_by: 'eksctl'
+  version: '1.24'
+
+#vpc:
+#    clusterEndpoints:
+#        publicAccess: true
+#        privateAccess: true
+
+iam:
+  withOIDC: true
+
+addons:
+- name: aws-ebs-csi-driver
+  version: v1.15.0-eksbuild.1 # optional
+  #serviceAccountRoleARN: arn:aws:iam::aws:policy/AmazonEKSEBSAccess # optional
+  tags: # optional
+    team: eks
+  attachPolicy: # optional
+    Statement:
+    - Effect: Allow
+      Action:
+        - ec2:AttachVolume
+        - ec2:CreateSnapshot
+        - ec2:CreateTags
+        - ec2:CreateVolume
+        - ec2:DeleteSnapshot
+        - ec2:DeleteTags
+        - ec2:DeleteVolume
+        - ec2:DescribeAvailabilityZones
+        - ec2:DescribeInstances
+        - ec2:DescribeSnapshots
+        - ec2:DescribeTags
+        - ec2:DescribeVolumes
+        - ec2:DescribeVolumesModifications
+        - ec2:DetachVolume
+        - ec2:ModifyVolume
+      Resource: '*'
+
+managedNodeGroups:
+  - name: ng-1
+    instanceType: t3.medium
+    desiredCapacity: 3
+    minSize: 2
+    maxSize: 3
+    availabilityZones:
+      - 'eu-west-1a'
+      - 'eu-west-1b'
+      - 'eu-west-1c'
+    labels:
+      role: 'worker-node'
+    tags:
+      role: 'worker-node'
+    #privateNetworking: true
+    ssh:
+      allow: true # will use ~/.ssh/id_rsa.pub as the default ssh key
+      #publicKeyPath: ~/.ssh/ec2_id_rsa.pub
+    volumeSize: 20
+    volumeType: 'gp3'
+#fargateProfiles:
+#  - name: fp-default
+#    selectors:
+      # All workloads in the "default" Kubernetes namespace will be
+      # scheduled onto Fargate:
+#      - namespace: default
+      # All workloads in the "kube-system" Kubernetes namespace will be
+      # scheduled onto Fargate:
+#      - namespace: kube-system
