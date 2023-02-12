@@ -3,7 +3,6 @@ project = "deployer"
 # Labels can be specified for organizational purposes.
 labels = { "foo" = "bar" }
 
-
 app "web" {
   labels = {
     env = "dev"
