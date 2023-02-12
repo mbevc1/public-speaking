@@ -1,7 +1,7 @@
 project = "deployer"
 
 # Labels can be specified for organizational purposes.
-labels = { "foo" = "bar" }
+labels = { "event" = "HashiTalks" }
 
 app "web" {
   labels = {
