@@ -8,6 +8,12 @@ app "web" {
     env = "dev"
   }
 
+  config {
+    env = {
+      HELLO = "Hello from HashiTalks 2023!"
+    }
+  }
+
   build {
     use "docker" {
     }
@@ -34,6 +40,7 @@ app "web" {
     #}
     use "kubernetes" {
       probe_path   = "/"
+      replicas     = 1
       service_port = var.port
     }
   }
@@ -52,9 +59,9 @@ app "web" {
 }
 
 variable "region" {
-  type    = string
-  default = "eu-west-1"
-  env     = ["REGION"]
+  type = string
+  #default = "eu-west-1"
+  env = ["REGION"]
 }
 
 variable "port" {
