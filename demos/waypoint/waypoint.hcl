@@ -3,6 +3,23 @@ project = "deployer"
 # Labels can be specified for organizational purposes.
 labels = { "event" = "HashiTalks" }
 
+pipeline "full-up" {
+  step "my-build" {
+    use "build" {}
+  }
+
+  step "my-deploy" {
+    use "deploy" {}
+  }
+
+  step "my-release" {
+    use "release" {
+      prune        = true
+      prune_retain = 4
+    }
+  }
+}
+
 app "web" {
   labels = {
     env = "dev"
