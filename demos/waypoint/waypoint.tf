@@ -16,11 +16,6 @@ provider "aws" {
   region = var.region
 }
 
-provider "waypoint" {
-  waypoint_addr = "api.hashicorp.cloud:443"
-  token         = "nr9i7drhGtSxUQGxxUXnFRLwzUyvkSnQuyDc9LyFq1eZghPePEktHZTS1fngXmPWsRLra7KUNzuwBUqkebmdeshqrKtx5stKFFqGHPEH8RD7CCo2QVefiobiv8bqZsPmDArJD2jYzaJnF7C5UC8vtvfHrtw5yBpTpA751QVcbBauFaYUG3NdJsLrs83YduxzdWHp9p7kVb4mcuQXwPXDWVMsgwAuhrELPMVQED3R5PTjBW54VJUD9w2jgS73hQxDLeUK5ztSG3wKdJbFD2reHq8wpKuUFMmanW8dXNuDE9X26dSs1c3RAFb1qP1NAoDAEnaqG17Wex8L2xwd8mrVCmkAnQkroVjsdtnLMwev7L1WJy35cEQZH4ErU2bnTbPXHXMjH5wThNrA7QE9wbWu9Szz5p4gXvaczcLZRPA1V2odGpksRkt6BRqwLS7YBZF8S2xNBUCi"
-}
-
 resource "waypoint_project" "deployer" {
 
   project_name           = "deployer"
@@ -83,4 +78,9 @@ resource "aws_ecr_lifecycle_policy" "waypoint" {
     ]
 }
 EOF
+}
+
+provider "waypoint" {
+  waypoint_addr = "api.hashicorp.cloud:443"
+  token         = "nr9i7drhGtSxUQGxxUXnFRLwzUyvkSnQuyDc9LyFq1eZghPePEktHZTS1fngXmPWsRLra7KUNzuwBUqkebmdeshqrKtx5stKFFqGHPEH8RD7CCo2QVefiobiv8bqZsPmDArJD2jYzaJnF7C5UC8vtvfHrtw5yBpTpA751QVcbBauFaYUG3NdJsLrs83YduxzdWHp9p7kVb4mcuQXwPXDWVMsgwAuhrELPMVQED3R5PTjBW54VJUD9w2jgS73hQxDLeUK5ztSG3wKdJbFD2reHq8wpKuUFMmanW8dXNuDE9X26dSs1c3RAFb1qP1NAoDAEnaqG17Wex8L2xwd8mrVCmkAnQkroVjsdtnLMwev7L1WJy35cEQZH4ErU2bnTbPXHXMjH5wThNrA7QE9wbWu9Szz5p4gXvaczcLZRPA1V2odGpksRkt6BRqwLS7YBZF8S2xNBUC"
 }
