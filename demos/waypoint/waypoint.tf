@@ -16,25 +16,25 @@ provider "aws" {
   region = var.region
 }
 
-resource "waypoint_project" "deployer" {
-
-  project_name           = "deployer"
-  remote_runners_enabled = false
-
-  data_source_git {
-    git_url                   = "https://github.com/mbevc1/public-speaking"
-    git_path                  = "demos/waypoint"
-    git_ref                   = "HEAD"
-    file_change_signal        = "some-signal"
-    git_poll_interval_seconds = 15
-  }
-
-  app_status_poll_seconds = 12
-
-  project_variables = {
-    region = var.region
-  }
-}
+#resource "waypoint_project" "deployer" {
+#
+#  project_name           = "deployer"
+#  remote_runners_enabled = false
+#
+#  data_source_git {
+#    git_url                   = "https://github.com/mbevc1/public-speaking"
+#    git_path                  = "demos/waypoint"
+#    git_ref                   = "HEAD"
+#    file_change_signal        = "some-signal"
+#    git_poll_interval_seconds = 15
+#  }
+#
+#  app_status_poll_seconds = 12
+#
+#  project_variables = {
+#    region = var.region
+#  }
+#}
 
 variable "region" {
   type    = string
