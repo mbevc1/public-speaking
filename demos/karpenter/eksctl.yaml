@@ -55,7 +55,7 @@ iam:
 #    logRetentionInDays: 7
 
 #karpenter:
-#  version: 'v0.22.1' # Exact version must be specifiedi
+#  version: 'v0.25.0' # Exact version must be specified
 #  createServiceAccount: true # default is false
 #  defaultInstanceProfile: 'KarpenterNodeInstanceProfile-mb' # default is to use the IAM instance profile created by eksctl
 
