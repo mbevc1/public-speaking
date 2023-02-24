@@ -6,7 +6,7 @@ metadata:
   region: eu-west-1
   tags:
     managed_by: 'eksctl'
-  version: '1.24'
+  version: '1.25'
 
 #vpc:
 #    clusterEndpoints:
@@ -18,7 +18,7 @@ iam:
 
 addons:
 - name: aws-ebs-csi-driver
-  version: v1.15.0-eksbuild.1 # optional
+  version: v1.16.0-eksbuild.1 # optional
   #serviceAccountRoleARN: arn:aws:iam::aws:policy/AmazonEKSEBSAccess # optional
   tags: # optional
     team: eks
