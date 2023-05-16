@@ -31,7 +31,7 @@ spec:
     - key: "kubernetes.io/arch"
       operator: In
       values: ["arm64", "amd64"]
-    - key: "karpenter.sh/capacity-type" # If not included, the webhook for the AWS cloud provider will default to on-demand
+    - key: "karpenter.sh/capacity-type" # If not included, the webhook for the AWS cloud provider will default to on-demand, not spot
       operator: In
       values: ["on-demand"]
   # These fields vary per cloud provider, see your cloud provider specific documentation
