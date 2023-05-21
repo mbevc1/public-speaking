@@ -4,7 +4,7 @@ CLUSTER_NAME=mb
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 #CLUSTER_ENDPOINT="$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output text)"
 KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter"
-KARPENTER_VERSION="v0.27.3"
+KARPENTER_VERSION="v0.27.5"
 
 #helm repo add karpenter https://awslabs.github.io/karpenter/charts
 #helm repo add karpenter https://charts.karpenter.sh
@@ -15,7 +15,9 @@ helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --vers
   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_IAM_ROLE_ARN} \
   --set settings.aws.clusterName=${CLUSTER_NAME} \
   --set settings.aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
-  --set settings.aws.interruptionQueueName=${CLUSTER_NAME}
+  --set settings.aws.interruptionQueueName=${CLUSTER_NAME} \
+  --set controller.image.repository=cgr.dev/chainguard/karpenter \
+  --set controller.image.digest=sha256:3f9906ffd5bb2ee22319fff61088668603bf36cf26c12b7a6892ca1375685729
   #--wait # for the defaulting webhook to install before creating a Provisioner
   #--set settings.aws.clusterEndpoint=${CLUSTER_ENDPOINT} \
   #--set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter" \
