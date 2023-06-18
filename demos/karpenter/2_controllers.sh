@@ -19,6 +19,12 @@ helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --vers
   --set controller.image.repository=cgr.dev/chainguard/karpenter \
   --set controller.image.digest=sha256:3f9906ffd5bb2ee22319fff61088668603bf36cf26c12b7a6892ca1375685729
   #--wait # for the defaulting webhook to install before creating a Provisioner
+  # either "ip-name" or "resource-name"
+  #--set settings.aws.nodeNameConvention=resource-name \
+  #--set controller.resources.requests.cpu=1 \
+  #--set controller.resources.requests.memory=1Gi \
+  #--set controller.resources.limits.cpu=1 \
+  #--set controller.resources.limits.memory=1Gi \
   #--set settings.aws.clusterEndpoint=${CLUSTER_ENDPOINT} \
   #--set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter" \
   #--set serviceAccount.create=false \
