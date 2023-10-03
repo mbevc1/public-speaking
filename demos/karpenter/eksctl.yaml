@@ -8,7 +8,7 @@ metadata:
     managed_by: 'eksctl'
     karpenter.sh/discovery: mb
     #kubernetes.io/cluster/mb: true
-  version: '1.27'
+  version: '1.28'
 
 #vpc:
 #    clusterEndpoints:
@@ -55,7 +55,7 @@ iam:
 #    logRetentionInDays: 7
 
 #karpenter:
-#  version: 'v0.25.0' # Exact version must be specified
+#  version: 'v0.31.0' # Exact version must be specified
 #  createServiceAccount: true # default is false
 #  defaultInstanceProfile: 'KarpenterNodeInstanceProfile-mb' # default is to use the IAM instance profile created by eksctl
 
