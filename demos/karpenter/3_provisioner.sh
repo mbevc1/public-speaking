@@ -65,8 +65,8 @@ spec:
   subnetSelector:
     karpenter.sh/discovery: ${CLUSTER_NAME}
   securityGroupSelector:
-    #karpenter.sh/discovery: ${CLUSTER_NAME}
-    kubernetes.io/cluster/${CLUSTER_NAME}: '*'
+    karpenter.sh/discovery: ${CLUSTER_NAME}
+    #kubernetes.io/cluster/${CLUSTER_NAME}: '*'
   instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}          # optional, if already set in controller args
   #launchTemplate: MyLaunchTemplate            # optional, see Launch Template documentation
   tags:
