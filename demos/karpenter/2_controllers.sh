@@ -13,9 +13,9 @@ KARPENTER_VERSION="v0.33.0"
 helm upgrade --install karpenter oci://public.ecr.aws/karpenter/karpenter --version ${KARPENTER_VERSION} \
   --create-namespace --namespace karpenter \
   --set serviceAccount.annotations."eks\.amazonaws\.com/role-arn"=${KARPENTER_IAM_ROLE_ARN} \
-  --set settings.aws.clusterName=${CLUSTER_NAME} \
-  --set settings.aws.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
-  --set settings.aws.interruptionQueueName=${CLUSTER_NAME}
+  --set settings.clusterName=${CLUSTER_NAME} \
+  --set settings.defaultInstanceProfile=KarpenterNodeInstanceProfile-${CLUSTER_NAME} \
+  --set settings.interruptionQueueName=${CLUSTER_NAME}
   #--set controller.image.repository=cgr.dev/chainguard/karpenter \
   #--set controller.image.digest=sha256:8d94dce2917501afabe9aa3323145e6ccc017478eab386fac460659ec5d6913e
   #--wait # for the defaulting webhook to install before creating a Provisioner
