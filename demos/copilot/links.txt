@@ -1,0 +1,2 @@
+https://aws.github.io/copilot-cli/docs/concepts/applications/
+https://catalog.workshops.aws/aws-copilot-workshop/en-US/30-mod1-deploy-webapp

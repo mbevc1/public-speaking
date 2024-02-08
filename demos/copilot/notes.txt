@@ -1,0 +1,7 @@
+copilot init -a app1 -n web1 -e test -t "Load Balanced Web Service" -d ./Dockerfile --deploy
+copilot app init app1 -resource-tags --resource-tags managed_by=Copilot
+copilot svc deploy #--tag dev
+copilot svc status
+copilot svc logs --follow
+copilot run local --watch
+copilot app delete

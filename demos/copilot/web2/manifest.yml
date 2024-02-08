@@ -1,0 +1,22 @@
+# The manifest for the "web2" service.
+# Read the full specification for the "Static Site" type at:
+# https://aws.github.io/copilot-cli/docs/manifest/static-site/
+
+# Your service name will be used in naming your resources like S3 buckets, etc.
+name: web2
+type: Static Site
+
+files:
+  - source: copilot/index.html
+
+# You can override any of the values defined above by environment.
+# environments:
+#   test:
+#     files:
+#       - source: './blob'
+#         recursive: true
+#         destination: 'assets'
+#         exclude: '*'
+#         reinclude:
+#           - '*.txt'
+#           - '*.png'
