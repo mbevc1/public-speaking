@@ -64,7 +64,13 @@ spec:
   #weight: 1 # similar to afinity weigth (higher is better)
   disruption:
     consolidationPolicy: WhenUnderutilized
-    expireAfter: 720h # 30 * 24h = 720h
+    expireAfter: 720h # 30 * 24h = 720h - expire and recycle nodes daily
+    budgets:
+    - nodes: "20%" # 10% default
+    - nodes: "5"
+    - nodes: "0"
+      schedule: "@daily"
+      duration: 10m
 ---
 apiVersion: karpenter.k8s.aws/v1beta1
 kind: EC2NodeClass

@@ -18,6 +18,8 @@ spec:
       maxSurge: 25%
   template:
     metadata:
+      #annotations:
+      #  karpenter.sh/do-not-disrupt: "true"
       labels:
         app: inflate
     spec:
