@@ -2,7 +2,7 @@
 
 CLUSTER_NAME=mb
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-#KARPENTER_VERSION="v0.36.2"
+#KARPENTER_VERSION="v0.37.0"
 
 # Creates IAM resources used by Karpenter
 #TEMPOUT=$(mktemp)
@@ -37,3 +37,19 @@ eksctl create iamserviceaccount \
 #aws iam create-service-linked-role --aws-service-name spot.amazonaws.com || true
 # If the role has already been successfully created, you will see:
 # An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: Service role name AWSServiceRoleForEC2Spot has been taken in this account, please try a different suffix.
+
+# EBS CIS addon
+eksctl create iamserviceaccount \
+    --name ebs-csi-controller-sa \
+    --namespace kube-system \
+    --cluster ${CLUSTER_NAME} \
+    --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy \
+    --override-existing-serviceaccounts \
+    --approve \
+    --role-only \
+    --role-name AmazonEKS_EBS_CSI_DriverRole
+
+SERVICE_ACCOUNT_ROLE_ARN=$(aws iam get-role --role-name AmazonEKS_EBS_CSI_DriverRole | jq -r '.Role.Arn')
+
+eksctl create addon --name aws-ebs-csi-driver --cluster $CLUSTER_NAME \
+    --service-account-role-arn $SERVICE_ACCOUNT_ROLE_ARN --force
