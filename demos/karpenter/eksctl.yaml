@@ -84,7 +84,7 @@ iam:
 #    logRetentionInDays: 7
 
 #karpenter:
-#  version: 'v0.37.0' # Exact version must be specified
+#  version: 'v0.37.1' # Exact version must be specified
 #  createServiceAccount: true # default is false
 #  #defaultInstanceProfile: 'KarpenterNodeInstanceProfile-mb' # default is to use the IAM instance profile created by eksctl
 #  withSpotInterruptionQueue: true # adds all required policies and rules for supporting Spot Interruption Queue, default is false
