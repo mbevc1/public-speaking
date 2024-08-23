@@ -1,9 +1,13 @@
 #!/bin/bash
 
 CLUSTER_NAME=mb
+K8S_VERSION="1.30"
+ARM_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-arm64/recommended/image_id --query Parameter.Value --output text)"
+AMD_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2/recommended/image_id --query Parameter.Value --output text)"
+GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
 
 cat <<EOF | kubectl apply -f -
-apiVersion: karpenter.sh/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: default
@@ -40,7 +44,10 @@ spec:
           operator: In
           values: ["on-demand"]
       nodeClassRef:
+        group: karpenter.k8s.aws
+        kind: EC2NodeClass
         name: default
+      expireAfter: 720h # 30 * 24h = 720h - expire and recycle nodes daily
   # These fields vary per cloud provider, see your cloud provider specific documentation
   #provider: {}
   limits:
@@ -63,8 +70,8 @@ spec:
   ##ttlSecondsAfterEmpty: 30
   #weight: 1 # similar to afinity weigth (higher is better)
   disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: 720h # 30 * 24h = 720h - expire and recycle nodes daily
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 1m
     budgets:
     - nodes: "20%" # 10% default
     - nodes: "5"
@@ -72,7 +79,7 @@ spec:
       schedule: "@daily"
       duration: 10m
 ---
-apiVersion: karpenter.k8s.aws/v1beta1
+apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
 metadata:
   name: default
@@ -85,45 +92,16 @@ spec:
   securityGroupSelectorTerms:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}"
-  #subnetSelector:
-  #  karpenter.sh/discovery: ${CLUSTER_NAME}
-  #securityGroupSelector:
-  #  karpenter.sh/discovery: ${CLUSTER_NAME}
-    #kubernetes.io/cluster/${CLUSTER_NAME}: '*'
-  #instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}          # optional, if already set in controller args
+  amiSelectorTerms:
+    #- id: "${ARM_AMI_ID}"
+    #- id: "${AMD_AMI_ID}"
+    #- id: "${GPU_AMI_ID}" # <- GPU Optimized AMD AMI
+    - name: "amazon-eks-node-${K8S_VERSION}-*" # <- automatically upgrade when a new AL2 EKS Optimized AMI is released. This is unsafe for production workloads. Validate AMIs in lower environments before deploying them to production.
   #launchTemplate: MyLaunchTemplate            # optional, see Launch Template documentation
   tags:
     managed_by: "karpenter"                    # optional, add tags for your own use
     #karpenter.sh/discovery: ${CLUSTER_NAME}   # needs to match the SG selector
     team: a-team
----
-#apiVersion: karpenter.sh/v1alpha5
-#kind: Provisioner
-#metadata:
-#  name: default2
-#spec:
-#  labels:
-#    team: b-team
-#  requirements:
-#    - key: "karpenter.k8s.aws/instance-category"
-#      operator: In
-#      values: ["t", "c", "m"]
-#    - key: "karpenter.k8s.aws/instance-cpu"
-#      operator: In
-#      values: ["2", "4", "8", "16", "32"]
-#    - key: karpenter.k8s.aws/instance-hypervisor
-#      operator: In
-#      values: ["nitro"]
-#    - key: karpenter.sh/capacity-type
-#      operator: In
-#      values: ["on-demand"]
-#  limits:
-#    resources:
-#      cpu: 1000
-#  providerRef:
-#    name: default
-#  weight: 1
-#  ttlSecondsAfterEmpty: 10
 EOF
 
 echo "---"
