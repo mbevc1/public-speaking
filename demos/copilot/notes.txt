@@ -1,4 +1,5 @@
 copilot init -a app1 -n web1 -e test -t "Load Balanced Web Service" -d ./Dockerfile --deploy
+# copilot init -a app-2048 -n web-2048 -e test -t "Load Balanced Web Service" -i public.ecr.aws/l6m2t8p7/docker-2048:latest --deploy
 copilot app init app1 -resource-tags --resource-tags managed_by=Copilot
 copilot svc deploy #--tag dev
 copilot svc status
