@@ -2,13 +2,12 @@
 
 CLUSTER_NAME=mb
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-#KARPENTER_VERSION="v1.0.8"
+#KARPENTER_VERSION="1.1.0"
 
 # Creates IAM resources used by Karpenter
 #TEMPOUT=$(mktemp)
 #TEMPOUT=iam-cfn.yaml
-#curl -fsSL https://raw.githubusercontent.com/awslabs/karpenter/"${KARPENTER_VERSION}"/docs/aws/karpenter.cloudformation.yaml > $TEMPOUT \ &&
-#curl -fsSL https://karpenter.sh/${KARPENTER_VERSION}/getting-started/getting-started-with-eksctl/cloudformation.yaml > cloudformation.yaml
+#curl -fsSL https://raw.githubusercontent.com/aws/karpenter-provider-aws/v"${KARPENTER_VERSION}"/website/content/en/preview/getting-started/getting-started-with-karpenter/cloudformation.yaml > $TEMPOUT \ &&
 TEMPOUT=cloudformation.yaml
 aws cloudformation deploy \
   --stack-name "Karpenter-${CLUSTER_NAME}" \
