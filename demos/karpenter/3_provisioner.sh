@@ -47,7 +47,7 @@ spec:
         group: karpenter.k8s.aws
         kind: EC2NodeClass
         name: default
-      expireAfter: 720h # 30 * 24h = 720h - expire and recycle nodes daily
+      expireAfter: 75m #720h # 30 * 24h = 720h - expire and recycle nodes daily
   # These fields vary per cloud provider, see your cloud provider specific documentation
   #provider: {}
   limits:
@@ -78,6 +78,8 @@ spec:
     - nodes: "0"
       schedule: "@daily"
       duration: 10m
+      #reasons:
+      #- "Underutilized"
 ---
 apiVersion: karpenter.k8s.aws/v1
 kind: EC2NodeClass
