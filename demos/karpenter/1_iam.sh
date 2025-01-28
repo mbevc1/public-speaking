@@ -2,7 +2,7 @@
 
 CLUSTER_NAME=mb
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-#KARPENTER_VERSION="1.1.2"
+#KARPENTER_VERSION="1.2.0"
 
 # Creates IAM resources used by Karpenter
 #TEMPOUT=$(mktemp)
