@@ -1,10 +1,15 @@
 #!/bin/bash
 
 CLUSTER_NAME=mb
-K8S_VERSION="1.30"
+K8S_VERSION="1.31"
 ARM_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-arm64/recommended/image_id --query Parameter.Value --output text)"
 AMD_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2/recommended/image_id --query Parameter.Value --output text)"
 GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
+
+echo "---"
+kubectl get nodepool default -o yaml | yq #-M
+echo "---"
+kubectl get ec2nodeclass default -o yaml | yq #-M
 
 cat <<EOF | kubectl apply -f -
 apiVersion: karpenter.sh/v1
@@ -52,28 +57,18 @@ spec:
   #provider: {}
   limits:
     cpu: 1000
-  #providerRef:                                # optional, recommended to use instead of 'provider'
-  #  name: default
-  #provider:
-  #  subnetSelector:
-  #    karpenter.sh/discovery: ${CLUSTER_NAME}
-  #  securityGroupSelector:
-  #    karpenter.sh/discovery: ${CLUSTER_NAME}
-  #  tags:
-  #    team: a-team
-  #  instanceProfile: KarpenterNodeInstanceProfile-${CLUSTER_NAME}
-  # Enables consolidation which attempts to reduce cluster cost by both removing un-needed nodes and down-sizing those
-  # that can't be removed. Mutually exclusive with the ttlSecondsAfterEmpty parameter.
-  #consolidation:
-  #  enabled: true
-  #ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
+    memory: 1000Gi
+  ##ttlSecondsUntilExpired: 2592000 # 30 Days = 60 * 60 * 24 * 30 Seconds;
   ##ttlSecondsAfterEmpty: 30
-  #weight: 1 # similar to afinity weigth (higher is better)
+  #weight: 1 # Priority given to the NodePool when the scheduler considers which NodePool to select. Similar to afinity weigth (higher is better)
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
-    consolidateAfter: 1m
+    consolidateAfter: 10s
     budgets:
-    - nodes: "20%" # 10% default
+    - nodes: "20%" # 10% defaulti
+      #reasons:
+      #- "Empty"
+      #- "Drifted"
     - nodes: "5"
     - nodes: "0"
       schedule: "@daily"
@@ -105,8 +100,3 @@ spec:
     #karpenter.sh/discovery: ${CLUSTER_NAME}   # needs to match the SG selector
     team: a-team
 EOF
-
-echo "---"
-kubectl get nodepool default -o yaml | yq #-M
-echo "---"
-kubectl get ec2nodeclass default -o yaml | yq #-M
