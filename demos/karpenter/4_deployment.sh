@@ -48,8 +48,10 @@ spec:
 EOF
 
 echo "Done!"
-read
+#read
+sleep 2
 
+echo "---"
 kubectl get deployment inflate -o yaml | yq #-M
 
 # 1 3 7-delSmall 100

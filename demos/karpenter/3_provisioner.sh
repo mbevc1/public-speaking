@@ -97,7 +97,8 @@ spec:
 EOF
 
 echo "Done!"
-read
+#read
+sleep 4
 
 echo "---"
 kubectl get nodepool default -o yaml | yq #-M
