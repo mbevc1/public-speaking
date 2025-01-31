@@ -4,7 +4,7 @@ CLUSTER_NAME=mb
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 #CLUSTER_ENDPOINT="$(aws eks describe-cluster --name ${CLUSTER_NAME} --query "cluster.endpoint" --output text)"
 KARPENTER_IAM_ROLE_ARN="arn:aws:iam::${AWS_ACCOUNT_ID}:role/${CLUSTER_NAME}-karpenter"
-KARPENTER_VERSION="1.2.0"
+KARPENTER_VERSION="1.2.1"
 
 #helm repo add karpenter https://awslabs.github.io/karpenter/charts
 #helm repo add karpenter https://charts.karpenter.sh
