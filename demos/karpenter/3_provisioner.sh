@@ -6,11 +6,6 @@ ARM_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_
 AMD_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2/recommended/image_id --query Parameter.Value --output text)"
 GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
 
-echo "---"
-kubectl get nodepool default -o yaml | yq #-M
-echo "---"
-kubectl get ec2nodeclass default -o yaml | yq #-M
-
 cat <<EOF | kubectl apply -f -
 apiVersion: karpenter.sh/v1
 kind: NodePool
@@ -93,10 +88,18 @@ spec:
     #- id: "${ARM_AMI_ID}"
     #- id: "${AMD_AMI_ID}"
     #- id: "${GPU_AMI_ID}" # <- GPU Optimized AMD AMI
-    - name: "amazon-eks-node-${K8S_VERSION}-*" # <- automatically upgrade when a new AL2 EKS Optimized AMI is released. This is unsafe for production workloads. Validate AMIs in lower environments before deploying them to production.
+    - name: "amazon-eks*-node-${K8S_VERSION}-*" # <- automatically upgrade when a new AL2 EKS Optimized AMI is released. This is unsafe for production workloads. Validate AMIs in lower environments before deploying them to production.
   #launchTemplate: MyLaunchTemplate            # optional, see Launch Template documentation
   tags:
     managed_by: "karpenter"                    # optional, add tags for your own use
     #karpenter.sh/discovery: ${CLUSTER_NAME}   # needs to match the SG selector
     team: a-team
 EOF
+
+echo "Done!"
+read
+
+echo "---"
+kubectl get nodepool default -o yaml | yq #-M
+echo "---"
+kubectl get ec2nodeclass default -o yaml | yq #-M

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-kubectl get deployment inflate -o yaml | yq #-M
-
 cat <<EOF | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
@@ -48,6 +46,11 @@ spec:
       nodeSelector:
         kubernetes.io/arch: amd64
 EOF
+
+echo "Done!"
+read
+
+kubectl get deployment inflate -o yaml | yq #-M
 
 # 1 3 7-delSmall 100
 #kubectl scale deployment inflate --replicas 5
