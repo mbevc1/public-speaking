@@ -14,6 +14,7 @@ variable "region" {
 variable "db-pass" {
   type        = string
   description = "Default DB password"
-  default     = null
+  default     = "SuperSecretValue!"
+  nullable    = false
   sensitive   = true
 }

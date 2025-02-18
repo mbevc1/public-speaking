@@ -7,3 +7,8 @@ output "db-pass" {
   value     = var.db-pass
   sensitive = true
 }
+
+#output "creds" {
+#  value     = jsondecode(data.aws_secretsmanager_secret_version.fetch.secret_string)
+#  sensitive = true
+#}
