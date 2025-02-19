@@ -6,6 +6,6 @@ variable "test" {
 }
 
 output "something" {
-  value     = var.test
+  value     = "module: ${var.test}"
   ephemeral = true
 }
