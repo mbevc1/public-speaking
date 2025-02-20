@@ -33,11 +33,11 @@ provider "mysql" {
 }
 
 # Create a Database
-#resource "mysql_database" "app" {
-#  name = "my_awesome_app"
-#
-#  depends_on = [module.vpc, aws_db_instance.db]
-#}
+resource "mysql_database" "app" {
+  name = "my_awesome_app"
+
+  depends_on = [module.vpc, aws_db_instance.db]
+}
 
 resource "aws_ssm_parameter" "secret" {
   name             = "/test/password"
