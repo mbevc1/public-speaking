@@ -2,9 +2,10 @@
 
 CLUSTER_NAME=mb
 K8S_VERSION="1.31"
-ARM_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-arm64/recommended/image_id --query Parameter.Value --output text)"
-AMD_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2/recommended/image_id --query Parameter.Value --output text)"
-GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2-gpu/recommended/image_id --query Parameter.Value --output text)"
+#ARM_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023-arm64/recommended/image_id --query Parameter.Value --output text)"
+#AMD_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023/recommended/image_id --query Parameter.Value --output text)"
+#GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023-gpu/recommended/image_id --query Parameter.Value --output text)"
+ALIAS_VERSION="$(aws ssm get-parameter --name "/aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023/x86_64/standard/recommended/image_id" --query Parameter.Value | xargs aws ec2 describe-images --query 'Images[0].Name' --image-ids | sed -r 's/^.*(v[[:digit:]]+).*$/\1/')"
 
 cat <<EOF | kubectl apply -f -
 apiVersion: karpenter.sh/v1
@@ -76,19 +77,22 @@ kind: EC2NodeClass
 metadata:
   name: default
 spec:
-  amiFamily: AL2 # Amazon Linux 2
+  #amiFamily: AL2 # Amazon Linux 2
+  amiFamily: AL2023 # Amazon Linux 2
   role: "KarpenterNodeRole-${CLUSTER_NAME}"
+  amiSelectorTerms:
+    #- id: "${ARM_AMI_ID}"
+    #- id: "${AMD_AMI_ID}"
+    #- id: "${GPU_AMI_ID}" # <- GPU Optimized AMD AMI
+    - name: "amazon-eks-node-*-${K8S_VERSION}-*" # <- automatically upgrade when a new AL2 EKS Optimized AMI is released. This is unsafe for production workloads. Validate AMIs in lower environments before deploying them to production.
+    # aws ssm get-parameters-by-path --path "/aws/service/eks/optimized-ami/1.33/amazon-linux-2023/" --recursive | jq -cr '.Parameters[].Name' | grep -v "recommended" | awk -F '/' '{print $10}' | sed -r 's/.*(v[[:digit:]]+)$/\1/' | sort | uniq
+    #- alias: "al2023@${ALIAS_VERSION}" # exclusive with admiFAmily/other selectors
   subnetSelectorTerms:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}"
   securityGroupSelectorTerms:
     - tags:
         karpenter.sh/discovery: "${CLUSTER_NAME}"
-  amiSelectorTerms:
-    #- id: "${ARM_AMI_ID}"
-    #- id: "${AMD_AMI_ID}"
-    #- id: "${GPU_AMI_ID}" # <- GPU Optimized AMD AMI
-    - name: "amazon-eks*-node-${K8S_VERSION}-*" # <- automatically upgrade when a new AL2 EKS Optimized AMI is released. This is unsafe for production workloads. Validate AMIs in lower environments before deploying them to production.
   #launchTemplate: MyLaunchTemplate            # optional, see Launch Template documentation
   tags:
     managed_by: "karpenter"                    # optional, add tags for your own use

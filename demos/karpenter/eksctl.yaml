@@ -111,7 +111,7 @@ fargateProfiles:
 
 #managedNodeGroups:
 #  - instanceType: m5.large
-#    amiFamily: AmazonLinux2
+#    amiFamily: AmazonLinux2023 # prev: AmazonLinux2
 #    name: mb-ng
 #    desiredCapacity: 2
 #    minSize: 1
