@@ -3,7 +3,7 @@
 export CLUSTER_NAME=mb
 export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
 export K8S_VERSION="1.33"
-export KARPENTER_VERSION="1.6.1"
+export KARPENTER_VERSION="1.6.2"
 
 # Creates IAM resources used by Karpenter
 #TEMPOUT=$(mktemp)
