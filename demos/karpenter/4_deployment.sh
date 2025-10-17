@@ -57,7 +57,7 @@ kubectl get deployment inflate -o yaml | yq #-M
 # 1 3 7-delSmall 100
 #kubectl scale deployment inflate --replicas 5
 #kubectl logs -f -n karpenter $(kubectl get pods -n karpenter -l karpenter=controller -o name)
-#kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter --tail=100
+#kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter --tail=100 | jq -M | grep -E "^|message|reason"
 #kubectl get node -L "node.kubernetes.io/instance-type" -L "topology.kubernetes.io/zone" -L "kubernetes.io/arch" -L "karpenter.sh/capacity-type"
 #eks-node-viewer --node-selector karpenter.sh/nodepool --extra-labels topology.kubernetes.io/zone --resources cpu,memory
 #kubectl scale deployment inflate --replicas 0
