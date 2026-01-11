@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CLUSTER_NAME=mb
-K8S_VERSION="1.31"
+K8S_VERSION="1.32"
 #ARM_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023-arm64/recommended/image_id --query Parameter.Value --output text)"
 #AMD_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023/recommended/image_id --query Parameter.Value --output text)"
 #GPU_AMI_ID="$(aws ssm get-parameter --name /aws/service/eks/optimized-ami/${K8S_VERSION}/amazon-linux-2023-gpu/recommended/image_id --query Parameter.Value --output text)"
