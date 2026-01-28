@@ -1,0 +1,128 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: ${CLUSTER_NAME}
+  region: eu-west-1
+  tags:
+    managed_by: 'eksctl'
+    karpenter.sh/discovery: ${CLUSTER_NAME}
+    #kubernetes.io/cluster/mb: true
+  version: "${K8S_VERSION}"
+
+#zonalShiftConfig:
+#  enabled: true
+
+#vpc:
+#    clusterEndpoints:
+#        publicAccess: true
+#        privateAccess: true
+
+iam:
+  withOIDC: true
+#  serviceAccounts:
+#    - metadata:
+#        name: karpenter
+#        namespace: "karpenter"
+#      roleName: ${CLUSTER_NAME}-karpenter
+#      attachPolicyARNs:
+#        - arn:aws:iam::${AWS_ACCOUNT_ID}:policy/KarpenterControllerPolicy-${CLUSTER_NAME}
+#      roleOnly: true
+
+#iamIdentityMappings:
+#  - arn: "arn:aws:iam::${AWS_ACCOUNT_ID}:role/KarpenterNodeRole-${CLUSTER_NAME}"
+#    username: system:node:{{EC2PrivateDNSName}}
+#    groups:
+#      - system:bootstrappers
+#      - system:nodes
+      ## If you intend to run Windows workloads, the kube-proxy group should be specified.
+      # For more information, see https://github.com/aws/karpenter/issues/5099.
+      # - eks:kube-proxy-windows
+
+autoModeConfig:
+  # defaults to false
+  enabled: true
+  # optional, defaults to [general-purpose, system].
+  # suggested to leave unspecified
+  # To disable creation of nodePools, set it to the empty array ([]).
+  #nodePools: []string
+  # optional, eksctl creates a new role if this is not supplied
+  # and nodePools are present.
+  #nodeRoleARN: string
+
+# disable cluster-admin permissions to the IAM identity creating the cluster
+#accessConfig:
+#  bootstrapClusterCreatorAdminPermissions: false
+# EKS access entries
+#accessConfig:
+#  authenticationMode: API_AND_CONFIG_MAP
+#  accessEntries:
+#    - principalARN: arn:aws:iam::111122223333:user/my-user-name
+#      type: STANDARD
+#      kubernetesGroups: # optional Kubernetes groups
+#        - group1 # groups can used to give permissions via RBAC
+#        - group2
+#
+#    - principalARN: arn:aws:iam::111122223333:role/role-name-1
+#      accessPolicies: # optional access polices
+#        - policyARN: arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy
+#          accessScope:
+#            type: namespace
+#            namespaces:
+#              - default
+#              - my-namespace
+#              - dev-*
+#
+#    - principalARN: arn:aws:iam::111122223333:role/admin-role
+#      accessPolicies: # optional access polices
+#        - policyARN: arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy
+#          accessScope:
+#            type: cluster
+
+#cloudWatch:
+#  clusterLogging:
+#    enableTypes: ["audit", "authenticator"]
+#    logRetentionInDays: 7
+
+#karpenter:
+#  version: 'v1.8.5' # Exact version must be specified
+#  createServiceAccount: true # default is false
+#  #defaultInstanceProfile: 'KarpenterNodeInstanceProfile-mb' # default is to use the IAM instance profile created by eksctl
+#  withSpotInterruptionQueue: true # adds all required policies and rules for supporting Spot Interruption Queue, default is false
+
+addonsConfig:
+  disableDefaultAddons: true
+  autoApplyPodIdentityAssociations: true
+addons:
+  - name: external-dns
+    version: latest
+    configurationValues: |-
+      policy: sync
+    resolveConflicts: overwrite
+  - name: metrics-server
+#  - name: coredns
+#  - name: kube-proxy
+#  - name: vpc-cni
+
+#fargateProfiles:
+#  - name: karpenter
+#    selectors:
+#      - namespace: karpenter
+#      - namespace: kube-system
+      #- namespace: monitoring
+  # All workloads in the "kube-system" Kubernetes namespace will be
+  # scheduled onto Fargate:
+  #- name: kube-system
+  #  selectors:
+  #    - namespace: kube-system
+
+#managedNodeGroups:
+#  - instanceType: m5.large
+#    amiFamily: AmazonLinux2023 # prev: AmazonLinux2
+#    name: mb-ng
+#    desiredCapacity: 2
+#    minSize: 1
+#    maxSize: 10
+#    labels: {role: worker}
+#    tags:
+#     ng-role: worker
