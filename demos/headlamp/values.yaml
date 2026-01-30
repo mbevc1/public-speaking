@@ -1,9 +1,16 @@
 config:
   watchPlugins: true
+replicaCount: 2
 image:
   registry: "ghcr.io"
   repository: "headlamp-k8s/headlamp"
   tag: "latest"
+#podAnnotations:
+#  karpenter.sh/do-not-disrupt: "true"
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  maxUnavailable: null
 ingress:
   enabled: true
   annotations:

@@ -22,5 +22,6 @@ helm upgrade --install headlamp headlamp/headlamp --namespace kube-system \
 # kubectl create token headlamp --namespace kube-system
 # Logs
 # kubectl logs -f -n kube-system -l app.kubernetes.io/name=headlamp -c headlamp-plugin
+# aws-vault exec mct1 -- kubectl logs -f -n external-dns -l app.kubernetes.io/name=external-dns
 #
 # helm upgrade --install kubescape kubescape/kubescape-operator -n kubescape --create-namespace --set clusterName=`kubectl config current-context` --set capabilities.continuousScan=enable
