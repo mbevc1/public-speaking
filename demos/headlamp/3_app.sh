@@ -9,8 +9,10 @@ kubectl apply -f alb-ingressclass.yaml
 # Ingress
 kubectl apply -f app-2048_full.yaml
 
+#helm repo add external-secrets https://charts.external-secrets.io
+
 # external-secrets
-helm install external-secrets \
+helm upgrade --install external-secrets \
    external-secrets/external-secrets \
     -n external-secrets \
     --create-namespace
