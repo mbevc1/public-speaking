@@ -1,0 +1,98 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  IAM Role assumable by Terraform Cloud via OIDC (app.terraform.io),
+  granting permissions (IAM Identity Center management).
+
+Parameters:
+  TerraformCloudOrg:
+    Type: String
+    Default: markob
+    Description: Terraform Cloud Organization name (e.g. my-org)
+
+  TerraformCloudProject:
+    Type: String
+    Default: "Default Project"
+    Description: Terraform Cloud Project name (e.g. my-project)
+
+  TerraformCloudWorkspace:
+    Type: String
+    Default: demo-tf-actions
+    Description: Terraform Cloud Workspace name (e.g. my-workspace)
+
+  RoleName:
+    Type: String
+    Default: tfc-tf-actions
+    Description: Name of the IAM role to create
+
+  MaxSessionDuration:
+    Type: Number
+    Default: 3600
+    MinValue: 900
+    MaxValue: 43200
+    Description: Max session duration in seconds (15 min to 12 hours)
+
+  OIDCThumbprint:
+    Type: String
+    Default: 9e99a48a9960b14926bb7f3b02e22da2b0ab7280 #e7b8b5a6743ce1b2f17b041de59558a41472d70c
+    Description: >
+      SHA1 thumbprint of the Terraform Cloud OIDC root CA certificate.
+      Use the provided script to retrieve it (no colons recommended).
+
+Resources:
+  TerraformCloudOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: "https://app.terraform.io"
+      ClientIdList:
+        - "aws.workload.identity"
+      ThumbprintList:
+        - !Ref OIDCThumbprint
+
+  TerraformCloudOIDCRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref RoleName
+      MaxSessionDuration: !Ref MaxSessionDuration
+
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref TerraformCloudOIDCProvider
+            Action: "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals:
+                # Terraform Cloud OIDC audience
+                "app.terraform.io:aud": "aws.workload.identity"
+              StringLike:
+                # Terraform Cloud subject format:
+                # organization:<org>:project:<project>:workspace:<workspace>:run_phase:*
+                "app.terraform.io:sub":
+                  - !Sub "organization:${TerraformCloudOrg}:project:${TerraformCloudProject}:workspace:${TerraformCloudWorkspace}:run_phase:*"
+
+      Policies:
+        - PolicyName: identity-center-admin
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: IdentityCenterAdminAll
+                Effect: Allow
+                Action:
+                  - "sso:*"
+                  - "identitystore:*"
+                Resource: "*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Tags:
+        - Key: managed_by
+          Value: cloudformation
+
+Outputs:
+  RoleArn:
+    Description: ARN of the IAM Role Terraform Cloud will assume
+    Value: !GetAtt TerraformCloudOIDCRole.Arn
+
+  OIDCProviderArn:
+    Description: ARN of the Terraform Cloud OIDC Provider
+    Value: !Ref TerraformCloudOIDCProvider
