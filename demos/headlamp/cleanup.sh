@@ -9,5 +9,6 @@ kubectl delete deployment inflate
 kubectl delete -f app-2048_full.yaml
 kubectl delete -f headlamp-ing.yaml
 helm uninstall headlamp --namespace kube-system
+helm uninstall external-secrets --namespace external-secrets
 eksctl delete cluster --name ${CLUSTER_NAME}
 echo "Done!"
