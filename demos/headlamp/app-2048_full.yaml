@@ -55,14 +55,14 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:764407762618:certificate/ff042180-f64e-454d-9650-3a4f8bd36e42
-    external-dns.alpha.kubernetes.io/hostname: 2048.mb.scalefactory.net
+    external-dns.alpha.kubernetes.io/hostname: 2048.mb.kosli.dev
 spec:
   ingressClassName: alb
   tls:
     - hosts:
-      - 2048.mb.scalefactory.net
+      - 2048.mb.kosli.dev
   rules:
-    - host: 2048.mb.scalefactory.net
+    - host: 2048.mb.kosli.dev
       http:
         paths:
           - path: /
