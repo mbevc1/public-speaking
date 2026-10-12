@@ -2,7 +2,7 @@
 
 export CLUSTER_NAME=mb
 export AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-export K8S_VERSION="1.35"
+export K8S_VERSION="1.37"
 
 # Spin up EKS cluster
 #envsubst < eksctl.yaml

@@ -2,7 +2,7 @@
 
 CLUSTER_NAME=mb
 AWS_ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-HEADLAMP_VERSION="0.39.0"
+HEADLAMP_VERSION="0.45.0"
 
 # ALB Ingress Class
 kubectl apply -f alb-ingressclass.yaml
